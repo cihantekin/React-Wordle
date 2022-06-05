@@ -1,30 +1,31 @@
 import React from 'react'
 
 export default function Row({ guess, currentGuess, putGuess }) {
-    
+
     if (putGuess) {
         const currentGuessArray = [...currentGuess];
-            return (
-                <div className='row'>
-                    <div>{ currentGuessArray[0] }</div>
-                    <div>{ currentGuessArray[1] }</div>
-                    <div>{ currentGuessArray[2] }</div>
-                    <div>{ currentGuessArray[3] }</div>
-                    <div>{ currentGuessArray[4] }</div>
-                </div>
-            )
+        const items = []
+        for (let index = 0; index < 5; index++) {
+            const className = currentGuessArray[index] ? "filled" : "";
+            items.push(<div className={className}>{currentGuessArray[index]}</div>)
+        }
+
+        return (<div className='row current'>
+            {items}
+        </div>
+        )
     }
 
     if (guess) {
         return (
-            <div className='row'>
+            <div className='row past'>
                 {guess.map((l, i) => {
                     return <div key={i} className={l.color}>{l.key}</div>
                 })}
             </div>
         )
     }
-    
+
     return (
         <div className='row'>
             <div></div>
