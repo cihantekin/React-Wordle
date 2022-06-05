@@ -30,8 +30,28 @@ const useWordle = (solution) => {
         return formattedGuess
     }
 
-    const addNewGuess = () => {
+    const addNewGuess = (formattedGuess) => {
+        if (currentGuess === solution) {
+            setIsCorrect(true)
+        }
 
+        setGuesses((prevGuesses) => {
+            let newGuesses = [...prevGuesses]
+            newGuesses[turn] = formattedGuess
+            return newGuesses
+        })
+
+        setTurn((turn) => {
+            let newTurn = turn + 1
+            return newTurn
+        })
+
+        setHistory((prevHistory) => {
+            let newHistory = [...prevHistory, currentGuess]
+            return newHistory
+        })
+
+        setCurrentGuess("")
     }
 
     const handleKeyup = ({ key }) => {
@@ -64,7 +84,7 @@ const useWordle = (solution) => {
             }
 
             const formattedGuess = formatGuess()
-            console.log(formattedGuess)
+            addNewGuess(formattedGuess)
         }
     }
 
