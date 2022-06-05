@@ -1,14 +1,33 @@
 import { useState } from "react"
 
-const useWordle = ({ solution }) => {
+const useWordle = (solution) => {
     const [turn, setTurn] = useState(0)
     const [currentGuess, setCurrentGuess] = useState("")
-    const [guesses, setGuesses] = useState([])
+    const [guesses, setGuesses] = useState([...Array(6)])
     const [history, setHistory] = useState([])
     const [isCorrect, setIsCorrect] = useState(false)
 
     const formatGuess = () => {
-        console.log("Format guess called for: " + currentGuess)
+        let solutionArray = [...solution]
+        let formattedGuess = [...currentGuess].map((l) => {
+            return {key: l, color: "grey"}
+        })
+
+        formattedGuess.forEach((l, i) => {
+            if (solutionArray[i] === l.key) {
+                formattedGuess[i].color = "green"
+                solutionArray[i] = null
+            }
+        })
+
+        formattedGuess.forEach((l, i) => {
+            if (solutionArray.includes(l.key) && l.color !== "green") {
+                formattedGuess[i].color = "yellow"
+                solutionArray[solutionArray.indexOf(l.key)] = null
+            }
+        })
+
+        return formattedGuess
     }
 
     const addNewGuess = () => {
@@ -44,7 +63,8 @@ const useWordle = ({ solution }) => {
                 return
             }
 
-            formatGuess()
+            const formattedGuess = formatGuess()
+            console.log(formattedGuess)
         }
     }
 
