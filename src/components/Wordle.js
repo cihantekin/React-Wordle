@@ -1,26 +1,31 @@
 import React, { useEffect } from 'react'
 import useWordle from '../hooks/useWordle'
 import Grid from './Grid'
+import Keypad from './Keypad'
 
-export default function Wordle({solution}) {
-    
-    const {currentGuess, handleKeyup, turn, isCorrect, guesses} = useWordle(solution)
+export default function Wordle({ solution }) {
+
+    const { currentGuess, handleKeyup, turn, isCorrect, guesses, usedKeys } = useWordle(solution)
 
     //useEffect'e array olarak dependecyleri veriyoruz. Bu dependencylerde bir değişiklik olursa bu useEffect metodu tekrar çalışıyor
     useEffect(() => {
         window.addEventListener('keyup', handleKeyup)
+
+        if (isCorrect || turn > 5) {
+            window.removeEventListener('keyup', handleKeyup)
+        }
+
         return () => window.removeEventListener('keyup', handleKeyup)
-    }, [handleKeyup])
+    }, [handleKeyup, isCorrect, turn])
 
-    useEffect(() => {
-        // console.log(guesses, turn, isCorrect)
-    }, [guesses, turn, isCorrect])
 
-  return (
-      <div>
-          <div>Solution: {solution}</div>
-          <div>Current guess:{currentGuess}</div>
-          <Grid currentGuess={currentGuess} guesses={guesses} turn={turn} />
-      </div>
-  )
+
+    return (
+        <div>
+            <div>Solution: {solution}</div>
+            <div>Current guess:{currentGuess}</div>
+            <Grid currentGuess={currentGuess} guesses={guesses} turn={turn} />
+            <Keypad usedKeys={usedKeys} />
+        </div>
+    )
 }

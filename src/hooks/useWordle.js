@@ -6,11 +6,12 @@ const useWordle = (solution) => {
     const [guesses, setGuesses] = useState([...Array(6)])
     const [history, setHistory] = useState([])
     const [isCorrect, setIsCorrect] = useState(false)
+    const [usedKeys, setUsedKeys] = useState({})
 
     const formatGuess = () => {
         let solutionArray = [...solution]
         let formattedGuess = [...currentGuess].map((l) => {
-            return {key: l, color: "grey"}
+            return { key: l, color: "grey" }
         })
 
         formattedGuess.forEach((l, i) => {
@@ -46,6 +47,27 @@ const useWordle = (solution) => {
             return newTurn
         })
 
+        setUsedKeys(prevUsedKeys => {
+            formattedGuess.forEach(l => {
+                const currentColor = prevUsedKeys[l.key]
+
+                if (l.color === 'green') {
+                    prevUsedKeys[l.key] = 'green'
+                    return
+                }
+                if (l.color === 'yellow' && currentColor !== 'green') {
+                    prevUsedKeys[l.key] = 'yellow'
+                    return
+                }
+                if (l.color === 'grey' && currentColor !== ('green' || 'yellow')) {
+                    prevUsedKeys[l.key] = 'grey'
+                    return
+                }
+            })
+
+            return prevUsedKeys
+        })
+
         setHistory((prevHistory) => {
             let newHistory = [...prevHistory, currentGuess]
             return newHistory
@@ -53,6 +75,7 @@ const useWordle = (solution) => {
 
         setCurrentGuess("")
     }
+
 
     const handleKeyup = ({ key }) => {
         if (key === "Backspace") {
@@ -73,12 +96,12 @@ const useWordle = (solution) => {
                 console.log("You used all your guesses")
                 return
             }
-            
-            if(history.includes(currentGuess)) {
+
+            if (history.includes(currentGuess)) {
                 console.log("You already tried this word")
                 return
             }
-            if(currentGuess.length !== 5) {
+            if (currentGuess.length !== 5) {
                 console.log("Word must be 5 chars max")
                 return
             }
@@ -88,7 +111,7 @@ const useWordle = (solution) => {
         }
     }
 
-    return { turn, currentGuess, guesses, isCorrect, handleKeyup }
+    return { turn, currentGuess, guesses, isCorrect, handleKeyup, usedKeys }
 }
 
 export default useWordle

@@ -7,12 +7,13 @@ export default function Row({ guess, currentGuess, putGuess }) {
         const items = []
         for (let index = 0; index < 5; index++) {
             const className = currentGuessArray[index] ? "filled" : "";
-            items.push(<div className={className}>{currentGuessArray[index]}</div>)
+            items.push(<div key={index} className={className}>{currentGuessArray[index]}</div>)
         }
 
-        return (<div className='row current'>
-            {items}
-        </div>
+        return (
+            <div className='row current'>
+                {items}
+            </div>
         )
     }
 
