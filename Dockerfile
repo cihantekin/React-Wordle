@@ -2,9 +2,11 @@ FROM node:17-alpine
 
 WORKDIR /app
 
-COPY . .
+COPY package.json .
 
 RUN npm install
+
+COPY . .
 
 #container port
 EXPOSE 3000
